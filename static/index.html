@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UFO Sighting Country Predictor</title>
+    <style>
+      body { margin: 0; font-family: Arial, sans-serif; background: #111827; color: #f8fafc; }
+      main { max-width: 760px; margin: 32px auto; padding: 0 18px; }
+      h1 { font-size: 32px; margin: 0 0 10px; }
+      form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 24px 0; }
+      label { display: grid; gap: 6px; font-size: 14px; color: #cbd5e1; }
+      input { padding: 10px; border: 1px solid #475569; background: #0f172a; color: #f8fafc; }
+      button { grid-column: 1 / -1; padding: 11px 14px; border: 0; background: #38bdf8; color: #082f49; font-weight: 700; cursor: pointer; }
+      .result { min-height: 120px; padding: 18px; background: #0f172a; border: 1px solid #334155; }
+      .country { font-size: 42px; line-height: 1.1; font-weight: 700; }
+      @media (max-width: 720px) { form { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>UFO Sighting Country Predictor</h1>
+      <p>Enter a short UFO sighting duration and coordinates. The FastAPI backend predicts the likely country.</p>
+      <form id="form">
+        <label>Seconds
+          <input id="seconds" type="number" min="1" max="60" step="1" value="20">
+        </label>
+        <label>Latitude
+          <input id="latitude" type="number" min="-90" max="90" step="0.000001" value="53.2">
+        </label>
+        <label>Longitude
+          <input id="longitude" type="number" min="-180" max="180" step="0.000001" value="-2.916667">
+        </label>
+        <button type="submit">Predict country</button>
+      </form>
+      <section class="result">
+        <div>Prediction</div>
+        <div id="country" class="country">-</div>
+        <div id="confidence">Submit the form to begin.</div>
+      </section>
+    </main>
+    <script>
+      document.querySelector("#form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const response = await fetch("/api/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            seconds: Number(document.querySelector("#seconds").value),
+            latitude: Number(document.querySelector("#latitude").value),
+            longitude: Number(document.querySelector("#longitude").value)
+          })
+        });
+        const payload = await response.json();
+        document.querySelector("#country").textContent = payload.country_name;
+        document.querySelector("#confidence").textContent =
+          `Confidence: ${(payload.confidence * 100).toFixed(1)}% (${payload.country_code})`;
+      });
+    </script>
+  </body>
+</html>
