@@ -7,7 +7,7 @@ This repository completes `session-406-3`: a real FastAPI backend for UFO sighti
 - FastAPI backend
 - Uvicorn server
 - Form frontend served by the backend
-- JSON model artifact trained from the course UFO CSV
+- JSON model artifact migrated from the optimized session app: standardized linear softmax classifier with 0.9447 test accuracy
 
 ## Run Locally
 

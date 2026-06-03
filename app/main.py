@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from app.model import UfoCentroidModel
+from app.model import UfoLinearSoftmaxModel
 
 
 class PredictRequest(BaseModel):
@@ -17,7 +17,7 @@ class PredictRequest(BaseModel):
 
 
 app = FastAPI(title="Session 406 UFO Predictor", version="1.0.0")
-model = UfoCentroidModel.load()
+model = UfoLinearSoftmaxModel.load()
 
 static_dir = Path(__file__).resolve().parent.parent / "static"
 app.mount("/static", StaticFiles(directory=static_dir), name="static")

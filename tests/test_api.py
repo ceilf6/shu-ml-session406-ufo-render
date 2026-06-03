@@ -21,7 +21,7 @@ def test_predict_returns_country_for_sighting_features():
 
     assert response.status_code == 200
     payload = response.json()
-    assert set(payload) == {"country_code", "country_name", "confidence", "probabilities"}
+    assert {"country_code", "country_name", "confidence", "probabilities", "metadata"} <= set(payload)
     assert payload["country_code"] in {"au", "ca", "de", "gb", "us"}
     assert payload["country_name"] in {
         "Australia",
@@ -31,3 +31,4 @@ def test_predict_returns_country_for_sighting_features():
         "United States",
     }
     assert 0.0 <= payload["confidence"] <= 1.0
+    assert payload["metadata"]["testAccuracy"] >= 0.94
